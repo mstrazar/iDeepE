@@ -715,6 +715,10 @@ def run_network(model_type, X_train, test_bags, y_train, channel = 7, window_siz
     else:
         print 'only support CNN, CNN-LSTM, ResNet and DenseNet model'
 
+    print("Model summary")
+    print("=============")
+    print(model)
+    print("=============")
     if cuda:
         model = model.cuda()
     clf = Estimator(model)
