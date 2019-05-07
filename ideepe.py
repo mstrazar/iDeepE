@@ -24,6 +24,8 @@ from seq_motifs import get_motif
 import argparse
 #from sklearn.externals import joblib
 
+from Bio.SeqIO import parse
+
 
 if torch.cuda.is_available():
         cuda = True
@@ -124,21 +126,16 @@ def split_overlap_seq(seq, window_size = 101):
             bag_seqs.append(pad_seq)
     return bag_seqs
 
-def read_seq_graphprot(seq_file, label = 1):
+
+def read_fasta(seq_file, label = 1):
+    """ Parse a Fasta file correctly."""
     seq_list = []
     labels = []
-    seq = ''
-    with open(seq_file, 'r') as fp:
-        for line in fp:
-            if line[0] == '>':
-                name = line[1:-1]
-            else:
-                seq = line[:-1].upper()
-                seq = seq.replace('T', 'U')
-                seq_list.append(seq)
-                labels.append(label)
-    
+    for rec in parse(seq_file, "fasta"):
+        seq_list.append(str(rec.seq).upper().replace("U", "T"))
+        labels.append(label)
     return seq_list, labels
+
 
 def get_RNA_concolutional_array(seq, motif_len = 4):
     seq = seq.replace('U', 'T')
@@ -186,7 +183,7 @@ def load_graphprot_data(protein, train = True, path = './GraphProt_CLIP_sequence
                 label = 1
             else:
                 label = 0
-            seqs, labels = read_seq_graphprot(os.path.join(path, tmpfile), label = label)
+            seqs, labels = read_fasta(os.path.join(path, tmpfile), label = label)
             #pdb.set_trace()
             mix_label = mix_label + labels
             mix_seq = mix_seq + seqs
@@ -784,9 +781,9 @@ def run_ideepe_on_graphprot(model_type = 'CNN', local = False, ensemble = True):
 
 def read_data_file(posifile, negafile = None, train = True):
     data = dict()
-    seqs, labels = read_seq_graphprot(posifile, label = 1)
+    seqs, labels = read_fasta(posifile, label = 1)
     if negafile:
-        seqs2, labels2 = read_seq_graphprot(negafile, label = 0)
+        seqs2, labels2 = read_fasta(negafile, label = 0)
         seqs = seqs + seqs2
         labels = labels + labels2
         
