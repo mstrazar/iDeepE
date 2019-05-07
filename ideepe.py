@@ -308,7 +308,7 @@ class Estimator(object):
             self.optimizer.step()
 
             ## for log
-            loss_list.append(loss.data[0])
+            loss_list.append(loss.item())
 
         return sum(loss_list) / len(loss_list)
 
@@ -338,7 +338,7 @@ class Estimator(object):
         auc = roc_auc_score(y, predict)
         #lasses = torch.topk(y_pred, 1)[1].data.numpy().flatten()
         #cc = self._accuracy(classes, y)
-        return loss.data[0], auc
+        return loss.item(), auc
 
     def _accuracy(self, y_pred, y):
         return float(sum(y_pred == y)) / y.shape[0]
