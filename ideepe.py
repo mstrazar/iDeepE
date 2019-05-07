@@ -977,7 +977,7 @@ def run_ideepe(parser):
 	#pdb.set_trace()
         #auc = roc_auc_score(X_labels, predict)
         #print auc        
-        myprob = "\n".join(map(str, predict))  
+        myprob = "\n".join(map(str, predict)) + "\n"
         fw.write(myprob)
         fw.close()
     else:
