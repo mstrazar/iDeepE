@@ -1,3 +1,6 @@
+import warnings
+warnings.simplefilter("ignore", UserWarning)
+
 import sys
 import os
 import numpy as np
@@ -20,6 +23,7 @@ import timeit
 from seq_motifs import get_motif
 import argparse
 #from sklearn.externals import joblib
+
 
 if torch.cuda.is_available():
         cuda = True
